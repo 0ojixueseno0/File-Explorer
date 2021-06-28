@@ -1977,8 +1977,8 @@ function inBytes($ini_v) {
 				!CLIPBOARD.length && CLIPBOARD.push( $(this).closest('.options[data-real_path]').attr('data-real_path').trim() );
 
 				hide_option_menu();
-				if( confirm('Do you want to Delete it ?') ){
-					toast('Deleting...', '', 'wait');
+				if( confirm('你确定要删除它吗' ?') ){
+					toast('正在删除...', '', '等待');
 
 					var HASHVAL = decodeURIComponent(window.location.hash.substr(1));
 					$.post('', {do: DO_ACTION, ways: CLIPBOARD, path: HASHVAL, xsrf: XSRF}, function(data){
