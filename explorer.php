@@ -34,7 +34,7 @@ else if( is_writable(__DIR__) && version_compare($phpVer, '5.5.38') > -1 && getD
 }
 else {
 	$phpInfo = array(
-		'PHP 版本' => version_compare($phpVer, '5.5.38') > -1 ? '<small>好!</small><b class="green">'.$phpVer.'</b>' : '<small>更新至 5.5.38 或更高版本</small><b class="red">'.$phpVer.'</b>',
+		'PHP Version' => version_compare($phpVer, '5.5.38') > -1 ? '<small>好!</small><b class="green">'.$phpVer.'</b>' : '<small>更新至 5.5.38 或更高版本</small><b class="red">'.$phpVer.'</b>',
 		'PHP cURL' => function_exists('curl_init') ? '<small>很好!</small><b class="green">'.curl_version()['version'].'</b>' : '<small>推荐</small><svg width="26" height="26" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" class="red"/></svg>',
 	);
 	if( !function_exists('curl_init') ){
@@ -1770,7 +1770,7 @@ function inBytes($ini_v) {
 				}
 
 				var len = $modal.find('.uploading').length;
-				docTitle(len + ' 正在上传');
+				docTitle(len + ' uploads in progress');
 				$modal.find('.title').text(document.title);
 				$modal.find('.body').append( renderFileUpload(file, index) );
 
@@ -1786,9 +1786,9 @@ function inBytes($ini_v) {
 					if(e.lengthComputable) {
 						var progress = e.loaded / e.total * 100 | 0;
 						if( progress == 100 )
-							$modal.find('li.upload_'+ index).attr('title', '完成中...').find('.progress span').css('width', '100%');
+						$modal.find('li.upload_'+ index).attr('title', 'Finalizing...').find('.progress span').css('width', '100%');
 						else
-							$modal.find('li.upload_'+ index).attr('title', '上传中 '+ progress +'%').find('.progress span').css('width', progress + '%');
+							$modal.find('li.upload_'+ index).attr('title', 'Uploading '+ progress +'%').find('.progress span').css('width', progress + '%');
 					}
 				};
 
@@ -1796,14 +1796,14 @@ function inBytes($ini_v) {
 					$modal.find('li.upload_'+index).removeClass('uploading').removeAttr('title');
 
 					var len = $modal.find('.uploading').length;
-					docTitle(len + ' 正在上传');
+					docTitle(len + ' uploads in progress');
 					$modal.find('.title').text(document.title);
 					if( len < 1 ){
 						window.setTimeout(function(){
 							list();
 							docTitle();
 							modal('off');
-							toast('文件上传成功', '#070');
+							toast('Files Uploaded Successfully', '#070');
 							$modal.find('.body').empty();
 						}, 2000);
 					}
@@ -1811,13 +1811,13 @@ function inBytes($ini_v) {
 
 				XHR.upload.onabort = function () {
 					docTitle('上传已中止');
-					$modal.find('li.uploading.upload_'+ index).addClass('error').removeClass('uploading').removeAttr('title', '上传已中止');
+					$modal.find('li.uploading.upload_'+ index).addClass('error').removeClass('uploading').removeAttr('title', 'Upload Aborted');
 
 					window.setTimeout(function(){
 						list();
 						docTitle();
 						modal('off');
-						toast('上传已中止', '#B00');
+						toast('Files Aborted', '#B00');
 						$modal.find('.body').empty();
 					}, 5000);
 				};
@@ -1855,7 +1855,7 @@ function inBytes($ini_v) {
 				e.preventDefault();
 				var HASHVAL = decodeURIComponent(window.location.hash.substr(1));
 				var dirname = $form.find('#dirname').val().trim();
-				toast('创建中...', '', '等待');
+				toast('Creating...', '', 'wait');
 
 				dirname.length && $.post('', {do: 'mkdir', dirname: dirname, path: HASHVAL, xsrf: XSRF}, function(data){
 					list();
@@ -1874,7 +1874,7 @@ function inBytes($ini_v) {
 				e.preventDefault();
 				var HASHVAL = decodeURIComponent(window.location.hash.substr(1));
 				var filename = $form.find('#filename').val().trim();
-				toast('创建中...', '', '等待');
+				toast('Creating...', '', 'wait');
 
 				filename.length && $.post('', {do: 'nwfile', filename: filename, path: HASHVAL, xsrf: XSRF}, function(data){
 					list();
@@ -1977,8 +1977,8 @@ function inBytes($ini_v) {
 				!CLIPBOARD.length && CLIPBOARD.push( $(this).closest('.options[data-real_path]').attr('data-real_path').trim() );
 
 				hide_option_menu();
-				if( confirm('你确定要删除它吗' ?') ){
-					toast('正在删除...', '', '等待');
+				if( confirm('Do you want to Delete it ?') ){
+					toast('Deleting...', '', 'wait');
 
 					var HASHVAL = decodeURIComponent(window.location.hash.substr(1));
 					$.post('', {do: DO_ACTION, ways: CLIPBOARD, path: HASHVAL, xsrf: XSRF}, function(data){
@@ -2894,7 +2894,7 @@ function html_login($label){?>
 	# License: GNU
 	=============================================-->
 	<!DOCTYPE html>
-	<html lang="en">
+	<html lang="zh-CN">
 	<head>
 		<title>文件资源管理器 v<?= VERSION; ?></title>
 		<meta charset="utf-8">
@@ -3109,7 +3109,7 @@ function html_login($label){?>
 
 function html_editor($file){?>
 	<!DOCTYPE html>
-	<html lang="en">
+	<html lang="zh-CN">
 	<head>
 		<title>编辑文件 {<?= basename($file); ?>}</title>
 		<meta charset="utf-8">
