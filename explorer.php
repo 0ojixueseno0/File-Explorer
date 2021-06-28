@@ -34,14 +34,14 @@ else if( is_writable(__DIR__) && version_compare($phpVer, '5.5.38') > -1 && getD
 }
 else {
 	$phpInfo = array(
-		'PHP Version' => version_compare($phpVer, '5.5.38') > -1 ? '<small>Superb!</small><b class="green">'.$phpVer.'</b>' : '<small>Upgrade to 5.5.38 or greater</small><b class="red">'.$phpVer.'</b>',
-		'PHP cURL' => function_exists('curl_init') ? '<small>Awesome!</small><b class="green">'.curl_version()['version'].'</b>' : '<small>Recommended</small><svg width="26" height="26" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" class="red"/></svg>',
+		'PHP 版本' => version_compare($phpVer, '5.5.38') > -1 ? '<small>好!</small><b class="green">'.$phpVer.'</b>' : '<small>更新至 5.5.38 或更高版本</small><b class="red">'.$phpVer.'</b>',
+		'PHP cURL' => function_exists('curl_init') ? '<small>很好!</small><b class="green">'.curl_version()['version'].'</b>' : '<small>推荐</small><svg width="26" height="26" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" class="red"/></svg>',
 	);
 	if( !function_exists('curl_init') ){
-		$phpInfo['file_get_contents'] = function_exists('file_get_contents') && ini_get('allow_url_fopen') ? '<small>Glad to hear that!</small><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" class="green"/></svg>' : '<small>enable cURL or allow access to external URL(s)</small><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" class="red"/></svg>';
+		$phpInfo['file_get_contents'] = function_exists('file_get_contents') && ini_get('allow_url_fopen') ? '<small>Glad to hear that!</small><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" class="green"/></svg>' : '<small>启用cURL或允许访问外部URL</small><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" class="red"/></svg>';
 	}
-	$phpInfo['Write Permissions'] = is_writable(__DIR__) ? '<small>Sounds Great!</small><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" class="green"/></svg>' : '<small>set write permissions for current directory</small><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" class="red"/></svg>';
-	$phpInfo['Zip Archive'] = class_exists('ZipArchive') ? '<small>You&#39;re ready to rock!</small><br/><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" class="green"/></svg>' : '<small>compression & extraction will not work</small><br/><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" class="red"/></svg>';
+	$phpInfo['Write Permissions'] = is_writable(__DIR__) ? '<small>好极了!</small><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" class="green"/></svg>' : '<small>请设置当前目录的写入权限</small><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" class="red"/></svg>';
+	$phpInfo['Zip Archive'] = class_exists('ZipArchive') ? '<small>好得不能再好了!</small><br/><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" class="green"/></svg>' : '<small>压缩和解压将不起作用</small><br/><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" class="red"/></svg>';
 	html_setup($phpInfo);
 	exit;
 }
@@ -2134,7 +2134,7 @@ function inBytes($ini_v) {
 			$(document).on('click', '.toggle_view', function(e) {
 				e.preventDefault();
 				var fe_view = $('main').hasClass('listView') ? 'gridView'  : 'listView';
-				var vw_text = $('main').hasClass('listView') ? 'List View' : 'Grid View';
+				var vw_text = $('main').hasClass('listView') ? '列表视图' : '网格视图';
 
 				$(this).attr('title', vw_text);
 				$('body').addClass('loading');
@@ -2386,7 +2386,7 @@ function inBytes($ini_v) {
 					$list.empty();
 					$('#breadcrumb').empty().html(renderBreadcrumbs(HASHVAL)).animate({scrollLeft:'+=5000'});
 					if(data.flag == true && Array.isArray(data.response)) {
-						$('main').hasClass('listView') && $list.html('<div class="item tHead"><span class="tH name">Name</span><span class="tH size">Size</span><span class="tH time">Modified</span><span class="tH perm">Permission</span><span class="tH ownr">Owner</span></div>');
+						$('main').hasClass('listView') && $list.html('<div class="item tHead"><span class="tH name">名字</span><span class="tH size">大小</span><span class="tH time">更改时间</span><span class="tH perm">权限</span><span class="tH ownr">所有者</span></div>');
 						$.each(data.response, function(index, value){
 							$list.append(renderList(value));
 						});
@@ -2876,8 +2876,8 @@ function html_setup($phpInfo){?>
 					<li><span><?= $key; ?></span><?= $val; ?></li>
 				<?php endforeach; ?>
 			</ul>
-			<label>Password <input type="text" name="pwd" placeholder="Enter the Password" value="admin"></label>
-			<button name="do" value="install">INSTALL NOW</button>
+			<label>密码 <input type="text" name="pwd" placeholder="输入密码" value="admin"></label>
+			<button name="do" value="install">立即安装</button>
 		</form>
 	</main>
 </body>
@@ -3082,23 +3082,23 @@ function html_login($label){?>
 		<form method="POST" autocomplete="off" onsubmit="document.querySelector('main').style.opacity = 0; document.querySelector('body').style.backgroundColor = '#035';">
 			<?= $label; ?>
 			<div>
-				<input id="auth" type="password" name="auth" placeholder="Enter Password" spellcheck="false" required="true" autofocus="true" />
+				<input id="auth" type="password" name="auth" placeholder="输入密码" spellcheck="false" required="true" autofocus="true" />
 				<button type="submit"><svg viewBox="0 0 24 24"><path fill="#999" d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></button>
 			</div>
 		</form>
 	</main>
 	<footer>
 		<div>
-			<span>File Explorer v<?= VERSION; ?></span>
+			<span>文件资源管理器 v<?= VERSION; ?></span>
 			<b> &nbsp; &bull; &nbsp;</b>
 			<span>Made with &nbsp;<svg viewBox="0 0 24 24"><path fill="#D00" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>&nbsp; By &nbsp;<a target="_blank" href="https://github.com/webcdn">WebCDN</a></span>
 		</div>
 		<div>
-			<a target="_blank" href="https://github.com/webcdn/File-Explorer/issues">Report Bugs</a>
+			<a target="_blank" href="https://github.com/webcdn/File-Explorer/issues">报告漏洞</a>
 			<b> &nbsp; &bull; &nbsp;</b>
-			<a target="_blank" href="https://github.com/webcdn/File-Explorer/issues/1">Suggestions / Feedback</a>
+			<a target="_blank" href="https://github.com/webcdn/File-Explorer/issues/1">建议/反馈</a>
 			<b> &nbsp; &bull; &nbsp;</b>
-			<a target="_blank" href="https://gg.gg/contribute">Donate</a>
+			<a target="_blank" href="https://gg.gg/contribute">捐助</a>
 		</div>
 	</footer>
 </body>
@@ -3429,16 +3429,16 @@ function html_editor($file){?>
 	</form>
 	<footer>
 		<div>
-			<span>File Explorer v<?= VERSION; ?></span>
+			<span>文件资源管理器 v<?= VERSION; ?></span>
 			<b> &nbsp; &bull; &nbsp;</b>
 			<span>Made with &nbsp;<svg viewBox="0 0 24 24"><path fill="#D00" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>&nbsp; By &nbsp;<a target="_blank" href="https://github.com/webcdn">WebCDN</a></span>
 		</div>
 		<div>
-			<a target="_blank" href="https://github.com/webcdn/File-Explorer/issues">Report Bugs</a>
+			<a target="_blank" href="https://github.com/webcdn/File-Explorer/issues">报告漏洞</a>
 			<b> &nbsp; &bull; &nbsp;</b>
-			<a target="_blank" href="https://github.com/webcdn/File-Explorer/issues/1">Suggestions / Feedback</a>
+			<a target="_blank" href="https://github.com/webcdn/File-Explorer/issues/1">建议/反馈</a>
 			<b> &nbsp; &bull; &nbsp;</b>
-			<a target="_blank" href="https://gg.gg/contribute">Donate</a>
+			<a target="_blank" href="https://gg.gg/contribute">捐助</a>
 		</div>
 	</footer>
 	<script type="text/javascript">
