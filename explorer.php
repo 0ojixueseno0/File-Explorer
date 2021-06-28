@@ -2134,7 +2134,7 @@ function inBytes($ini_v) {
 			$(document).on('click', '.toggle_view', function(e) {
 				e.preventDefault();
 				var fe_view = $('main').hasClass('listView') ? 'gridView'  : 'listView';
-				var vw_text = $('main').hasClass('listView') ? '列表视图' : '网格视图';
+				var vw_text = $('main').hasClass('listView') ? 'List View' : 'Grid View';
 
 				$(this).attr('title', vw_text);
 				$('body').addClass('loading');
