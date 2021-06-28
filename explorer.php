@@ -3417,8 +3417,8 @@ function html_editor($file){?>
 	<header>
 		<label for="codedit" data-bytes="<?= @filesize($file); ?>"><?= basename($file); ?></label>
 		<div class="action">
-			<button type="submit" class="btn" form="editor">Save</button>
-			<button class="btn flat" onclick="window.open('', '_self', '').close(); return false;">Close</button>
+			<button type="submit" class="btn" form="editor">保存</button>
+			<button class="btn flat" onclick="window.open('', '_self', '').close(); return false;">关闭</button>
 		</div>
 	</header>
 	<form method="POST" id="editor">
@@ -3483,7 +3483,7 @@ function html_editor($file){?>
 		}
 
 		window.onbeforeunload = function() {
-			return 'Sorry, changes might not saved.';
+			return '抱歉,更改可能未保存.';
 		}
 
 		window.onload = function() {
