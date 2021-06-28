@@ -50,15 +50,15 @@ if( !isset($_SESSION['__allowed']) && strlen($config->password) ) {
 	if( !empty($_POST['auth']) ){
 		sleep(1);
 		if( md5(sha1($_POST['auth'])) === $config->password ) {
-			$label = '<label for="auth" style="color: #383;">Successfully Logged In</label>';
+			$label = '<label for="auth" style="color: #383;">登录成功</label>';
 			$_SESSION['__allowed'] = $_POST['auth'];
 			header('Refresh: 0;');
 			exit;
 		}
-		$label = '<label for="auth" style="color: #D22;">Incorrect Password</label>';
+		$label = '<label for="auth" style="color: #D22;">密码不正确</label>';
 	}
 	else if( !empty($_REQUEST['do']) ){
-		output(false, 'Session Destroyed, you need to Login Again!');
+		output(false, '会话已过期，请重新登录!');
 	}
 	$label = isset($label) ? $label : '<label for="auth">File Explorer v'.VERSION.'</label>';
 	html_login($label);
@@ -101,13 +101,13 @@ if( !empty($_REQUEST['do']) ){
 	else if( @$_POST['do'] == 'list' ){
 		clearstatcache();
 		if( !is_executable($path) ) {
-			output(false, 'Not Enough Permissions');
+			output(false, '权限不足');
 		}
 		else if( is_dir($path) ) {
 			$result = array();
 			$fps = scan_dir($path, 'dirFirst');
 
-			empty($fps) && output(false, 'Directory Empty');
+			empty($fps) && output(false, '目录为空');
 
 			foreach($fps as $i => $fp) {
 				if( !$config->show_hidden && substr(basename($fp), 0, 1) == '.' ){
@@ -144,7 +144,7 @@ if( !empty($_REQUEST['do']) ){
 			output(true, $result);
 		}
 		else {
-			output(false, 'Not a Directory');
+			output(false, '不是目录');
 		}
 	}
 
@@ -160,7 +160,7 @@ if( !empty($_REQUEST['do']) ){
 
 	elseif( @$_GET['do'] == 'edit' && !is_dir($real) && file_exists($real) ){
 		if( @$_POST['do'] == 'save' && isset($_POST['content']) ){
-			setData($path, $_POST['content']) ? output(true, 'File Saved Successfully') : output(false, 'Damn! saving error');
+			setData($path, $_POST['content']) ? output(true, '文件已成功保存') : output(false, '保存错误');
 		}
 		html_editor($real);
 		exit;
@@ -177,13 +177,13 @@ if( !empty($_REQUEST['do']) ){
 		$dir = trim( preg_replace('/[\<\>\:\"\/\\\|\?\*]/', '', @$_POST['dirname']), ' .');
 
 		if( in_array($dir, array('.', '..')) ) {
-			output(false, 'Invalid Attempt');
+			output(false, '无效尝试');
 		}
 		else if( is_dir($dir) ){
-			output(false, 'Directory Already Exist');
+			output(false, '目录已存在');
 		}
 		else {
-			mkdir($dir, 0755) ? output(true, 'Directory Created') : output(false, 'Unable to create directory');
+			mkdir($dir, 0755) ? output(true, '已创建目录') : output(false, '无法创建目录');
 		}
 	}
 
@@ -192,13 +192,13 @@ if( !empty($_REQUEST['do']) ){
 		$fl = trim( preg_replace('/[\<\>\:\"\/\\\|\?\*]/', '', @$_POST['filename']), ' .');
 
 		if( in_array($fl, array('.', '..')) ) {
-			output(false, 'Invalid Attempt');
+			output(false, '无效尝试');
 		}
 		else if( file_exists($fl) ) {
-			output(false, 'File Already Exist');
+			output(false, '文件已存在');
 		}
 		else {
-			touch($fl) ? output(true, 'File Created') : output(false, 'Unable to create file');
+			touch($fl) ? output(true, '已创建文件') : output(false, '无法创建文件');
 		}
 	}
 
@@ -209,7 +209,7 @@ if( !empty($_REQUEST['do']) ){
 			output(false, 'Invalid Attempt');
 		}
 		else {
-			rename($real, dirname($real).'/'.$new) ? output(true, 'Renamed Successfully') : output(false, 'Wrong Params');
+			rename($real, dirname($real).'/'.$new) ? output(true, '重命名成功') : output(false, '参数错误');
 		}
 	}
 
@@ -221,10 +221,10 @@ if( !empty($_REQUEST['do']) ){
 			foreach ($ways as $way) {
 				$ack &= cp_rf($way, $path, $way);
 			}
-			@$ack ? output(true, 'Copied Successfully') : output(false, 'Wrong Params');
+			@$ack ? output(true, '拷贝成功') : output(false, '参数错误');
 		}
 		else {
-			output(false, 'Copying Failed');
+			output(false, '拷贝失败');
 		}
 	}
 
@@ -236,10 +236,10 @@ if( !empty($_REQUEST['do']) ){
 			foreach ($ways as $way) {
 				$ack &= rename($way, $path . '/' . basename($way));
 			}
-			$ack ? output(true, 'Moved Successfully') : output(false, 'Wrong Params');
+			$ack ? output(true, '移动成功') : output(false, '参数错误');
 		}
 		else {
-			output(false, 'Moving Failed');
+			output(false, '移动失败');
 		}
 	}
 
@@ -251,10 +251,10 @@ if( !empty($_REQUEST['do']) ){
 			foreach ($ways as $way) {
 				$ack &= rm_rf($way);
 			}
-			$ack ? output(true, 'Deleted Successfully') : output(false, 'Unable to delete files');
+			$ack ? output(true, '删除成功') : output(false, '无法删除文件');
 		}
 		else {
-			output(false, 'Deletion Failed');
+			output(false, '删除失败');
 		}
 	}
 
@@ -266,14 +266,14 @@ if( !empty($_REQUEST['do']) ){
 					$zip->addFile($loc, str_replace($path, '', $loc));
 				}
 				$zip->close();
-				output(true, '`'.basename($path).'.zip` created successfully');
+				output(true, '`'.basename($path).'.zip` 创建成功');
 			}
 			else {
-				output(false, 'Oops! Unable to compress');
+				output(false, 'Oops! 无法压缩');
 			}
 		}
 		else {
-			output(false, 'Oops! Directory is corrupted');
+			output(false, 'Oops! 目录已损坏');
 		}
 	}
 
@@ -285,14 +285,14 @@ if( !empty($_REQUEST['do']) ){
 			if( $zip->open($path) === true ){
 				$zip->extractTo($pathTo);
 				$zip->close();
-				output(true, 'Archive Extracted Successfully');
+				output(true, '成功提取');
 			}
 			else {
-				output(false, 'Oops! Archive is corrupted');
+				output(false, 'Oops! 压缩文件已损坏');
 			}
 		}
 		else {
-			output(false, "Oops!, Error while extracting `.$ext` file");
+			output(false, "Oops!, 提取文件 `.$ext` 时出错");
 		}
 	}
 
@@ -311,7 +311,7 @@ if( !empty($_REQUEST['do']) ){
 				}
 			}
 		}
-		$ack ? output(true, 'Permission Modified') : output(false, 'Error to permit');
+		$ack ? output(true, '权限已更改') : output(false, '修改出错');
 	}
 
 	elseif( @$_POST['do'] == 'config' ){
@@ -325,17 +325,17 @@ if( !empty($_REQUEST['do']) ){
 	}
 
 	elseif( @$_REQUEST['do'] == 'logout' ){
-		logout() ? output(true, 'Logged Out Successfully') : output(false, 'Refreshing...');
+		logout() ? output(true, '成功登出') : output(false, '刷新中...');
 	}
 
 	elseif( @$_POST['do'] == 'upgrade' ){
 		if( @$_SESSION['gitJSON']['latest_ver'] != VERSION) {
 			$getUpdatedData = getData(@$_SESSION['gitJSON']['latest_url']);
 			logout();
-			setData(basename(__FILE__), $getUpdatedData) ? output(true, 'Updated to Newer Version') : output(false, 'Failed to Update');
+			setData(basename(__FILE__), $getUpdatedData) ? output(true, '已更新到较新版本') : output(false, '更新失败');
 		}
 		else {
-			output(false, 'No Updates Available');
+			output(false, '没有可用的更新');
 		}
 	}
 }
@@ -490,7 +490,7 @@ function inBytes($ini_v) {
 <!DOCTYPE html>
 <html lang="en" version="<?= VERSION; ?>">
 <head>
-	<title>File Explorer v<?= VERSION; ?></title>
+	<title>文件资源管理器 v<?= VERSION; ?></title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
 	<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAAwFBMVEVMaXEhZZlLoeZUrO0obqRUrO0hZZkob69UrO5UrO4iZpkhZZlTq+1Vf6wiZJohZphUrO5UrO4hZZkhZZlUrO4hZZkiZJpVrO0hZplFldNUq+48icRFltRUrO1UrO5Uq+0hZZlVq+4eZJohZphUrO5Mn94iZplVrO4hZZlJm9tXruwiZphDlNFWrO1UrO1Vq+1VrO5Uq+0veK8mbKFOouM2gbpRp+hTqus6h8IzfbZEldNAkc0jaJwsc6lHmtgiZpkio2ylAAAAMHRSTlMA/A039JHTB96uLZYdAyiRcviI29XoTc2+zepM0VaewKZfIZh89l/z8+wp9O9HgmUP4OQcAAABgElEQVR4Ae3UBXbdQBBE0RYzmNkOg7HF5tn/qsLtz6IKJ3cBb0ZSHdF/fyo/sc/UNG3Lfrkd0UBOoKllNrYHdnbVKsGgSwVqtWdD3o+mWqxTb4lq9Yb6slWrM596eqfabb2gflSXjRgNibN138FC7Xk78dGQ0AIHDYldBw2J5HuFNB8NieR7hezvFTobGSqq27LmGfsnqT40VNw1vIxrDAvlNa+wZgwJ3WS8kusQ2BHPe4fyhtt4fUMPNbfaJLAjXAK/l9jpESryWxb93tH9p9lmPI41FcpLHi+dhKqMAUc0tTeEIaGiZkgooWuGrEUSKhni0rfQPWNOJPTAmGMJ3TDmUkLXjLmS0B1jLiT0yJhTCZWM0SXUMGSfvoUKxuxIKGeMJ6GKMZaE0BmlEkJndCQhdEaGhNAZhd9C9xn8WyP6HjNy6RMT/GgyIzp/KKqGMa/ok0OGZSF9cpAx6pjou1zJ1ekL/T3YCekbfS8D3o+n08TB3uuGR3i7aRn0B/vvI/0jAVz6iypMAAAAAElFTkSuQmCC">
@@ -1492,26 +1492,26 @@ function inBytes($ini_v) {
 		<div id="breadcrumb"></div>
 		<nav>
 			<a class="toggle_view" title="<?= @$_COOKIE['fe_view'] == 'listView' ? 'Grid View' : 'List View'; ?>"><svg viewBox="0 0 24 24"><path /></svg></a>
-			<a onclick="modal('on', '#uploadModal');" title="Upload"><svg viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>Upload</a>
-			<a onclick="modal('on', '#newDirModal');" title="New Folder"><svg viewBox="0 0 24 24"><path d="M20 6h-8l-2-2H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-1 8h-3v3h-2v-3h-3v-2h3V9h2v3h3v2z"/></svg>New Folder</a>
-			<a onclick="modal('on', '#newFileModal');" title="New File"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 14h-3v3h-2v-3H8v-2h3v-3h2v3h3v2zm-3-7V3.5L18.5 9H13z"/></svg>New File</a>
-			<a onclick="modal('on', '#configModal');" title="Settings"><svg viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>Settings</a>
-			<a class="logout" title="Logout"><svg viewBox="0 0 24 24"><path d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42C17.99 7.86 19 9.81 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.19 1.01-4.14 2.58-5.42L6.17 5.17C4.23 6.82 3 9.26 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"/></svg>Logout</a>
+			<a onclick="modal('on', '#uploadModal');" title="Upload"><svg viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>上传</a>
+			<a onclick="modal('on', '#newDirModal');" title="New Folder"><svg viewBox="0 0 24 24"><path d="M20 6h-8l-2-2H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-1 8h-3v3h-2v-3h-3v-2h3V9h2v3h3v2z"/></svg>新建文件夹</a>
+			<a onclick="modal('on', '#newFileModal');" title="New File"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 14h-3v3h-2v-3H8v-2h3v-3h2v3h3v2zm-3-7V3.5L18.5 9H13z"/></svg>新建文件</a>
+			<a onclick="modal('on', '#configModal');" title="Settings"><svg viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>设置</a>
+			<a class="logout" title="Logout"><svg viewBox="0 0 24 24"><path d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42C17.99 7.86 19 9.81 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.19 1.01-4.14 2.58-5.42L6.17 5.17C4.23 6.82 3 9.26 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"/></svg>登出</a>
 		</nav>
 	</header>
 	<main class="<?= isset($_COOKIE['fe_view']) ? $_COOKIE['fe_view'] : 'gridView'; ?>"></main>
 	<footer>
 		<div>
-			<?php if( @$_SESSION['gitJSON']['latest_ver'] == VERSION ) :?><span>File Explorer v<?= VERSION; ?></span><?php else : ?><a class="btn upgrade">New Update Available</a><?php endif; ?>
+			<?php if( @$_SESSION['gitJSON']['latest_ver'] == VERSION ) :?><span>文件资源管理器 v<?= VERSION; ?></span><?php else : ?><a class="btn upgrade">新更新可用</a><?php endif; ?>
 			<b> &nbsp; &bull; &nbsp;</b>
 			<span>Made with &nbsp;<svg viewBox="0 0 24 24"><path fill="#D00" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>&nbsp; By &nbsp;<a target="_blank" href="https://github.com/webcdn">WebCDN</a></span>
 		</div>
 		<div>
-			<a target="_blank" href="https://github.com/webcdn/File-Explorer/issues">Report Bugs</a>
+			<a target="_blank" href="https://github.com/webcdn/File-Explorer/issues">提交漏洞</a>
 			<b> &nbsp; &bull; &nbsp;</b>
-			<a target="_blank" href="https://github.com/webcdn/File-Explorer/issues/1">Suggestions / Feedback</a>
+			<a target="_blank" href="https://github.com/webcdn/File-Explorer/issues/1">建议/反馈</a>
 			<b> &nbsp; &bull; &nbsp;</b>
-			<a target="_blank" href="https://gg.gg/contribute">Donate</a>
+			<a target="_blank" href="https://gg.gg/contribute">捐赠</a>
 		</div>
 	</footer>
 
@@ -1521,131 +1521,131 @@ function inBytes($ini_v) {
 	<!-- MODALs -->
 	<div id="uploadModal" class="modal">
 		<button class="btn flat" style="float: right;" onclick="modal('off');">Close</button>
-		<h5 class="title">Upload Files</h5>
+		<h5 class="title">上传文件</h5>
 		<div id="drop_area">
 			<div class="inputs">
-				<p>Drop Files Here</p>
-				<p>or</p>
-				<label for="uploadfile" class="btn">Choose Files</label>
+				<p>将文件拖至此处</p>
+				<p>或</p>
+				<label for="uploadfile" class="btn">选择文件</label>
 				<input id="uploadfile" type="file" multiple>
-				<p class="small">Maximum Upload File Size: &nbsp; <b class="maxSize"><?= $max_upload_size; ?></b></p>
+				<p class="small">最大上传文件大小: &nbsp; <b class="maxSize"><?= $max_upload_size; ?></b></p>
 			</div>
 		</div>
 	</div>
 
 	<div id="progressModal" class="modal">
-		<h4 class="title">Uploading</h4>
+		<h4 class="title">上传中</h4>
 		<ul class="body"></ul>
 		<div class="action">
-			<button type="button" class="btn">Abort</button>
+			<button type="button" class="btn">中止</button>
 		</div>
 	</div>
 
 	<div id="newDirModal" class="modal">
-		<h5 class="title">Create New Folder</h5>
+		<h5 class="title">新建文件夹</h5>
 		<form >
 			<div class="inputs">
-				<label>Enter Directory Name<input id="dirname" type="text"></label>
+				<label>键入目录名<input id="dirname" type="text"></label>
 			</div>
 			<div class="action">
-				<button type="submit" class="btn">Create</button>
-				<button type="button" class="btn flat" onclick="modal('off');">Close</button>
+				<button type="submit" class="btn">新建目录</button>
+				<button type="button" class="btn flat" onclick="modal('off');">取消</button>
 			</div>
 		</form>
 	</div>
 
 	<div id="newFileModal" class="modal">
-		<h5 class="title">Create New File</h5>
+		<h5 class="title">新建文件</h5>
 		<form>
 			<div class="inputs">
-				<label>Enter File Name<input id="filename" type="text"></label>
+				<label>键入文件名<input id="filename" type="text"></label>
 			</div>
 			<div class="action">
-				<button type="submit" class="btn">Create</button>
-				<button type="button" class="btn flat" onclick="modal('off');">Close</button>
+				<button type="submit" class="btn">新建文件</button>
+				<button type="button" class="btn flat" onclick="modal('off');">取消</button>
 			</div>
 		</form>
 	</div>
 
 	<div id="renameModal" class="modal">
-		<h5 class="title">Rename</h5>
+		<h5 class="title">重命名</h5>
 		<form>
 			<input type="hidden" id="path" />
 			<div class="inputs">
-				<label>Enter New Name<input id="newname" type="text"></label>
+				<label>键入新的名字<input id="newname" type="text"></label>
 			</div>
 			<div class="action">
-				<button type="submit" class="btn">Rename</button>
-				<button type="button" class="btn flat" onclick="modal('off');">Close</button>
+				<button type="submit" class="btn">重命名</button>
+				<button type="button" class="btn flat" onclick="modal('off');">取消</button>
 			</div>
 		</form>
 	</div>
 
 	<div id="permitModal" class="modal">
-		<h5 class="title">Set Permission</h5>
+		<h5 class="title">设置权限</h5>
 		<div class="inputs inline" title="Owner Permissions">
-			<label class="inline"><input type="checkbox" id="ownRead">Read</label>
-			<label class="inline"><input type="checkbox" id="ownWrit">Write</label>
-			<label class="inline"><input type="checkbox" id="ownExec">Execute</label>
+			<label class="inline"><input type="checkbox" id="ownRead">可读</label>
+			<label class="inline"><input type="checkbox" id="ownWrit">可写</label>
+			<label class="inline"><input type="checkbox" id="ownExec">可运行</label>
 		</div>
 		<div class="inputs inline" title="Group Permissions">
-			<label class="inline"><input type="checkbox" id="grpRead">Read</label>
-			<label class="inline"><input type="checkbox" id="grpWrit">Write</label>
-			<label class="inline"><input type="checkbox" id="grpExec">Execute</label>
+			<label class="inline"><input type="checkbox" id="grpRead">可读</label>
+			<label class="inline"><input type="checkbox" id="grpWrit">可写</label>
+			<label class="inline"><input type="checkbox" id="grpExec">可运行</label>
 		</div>
 		<div class="inputs inline" title="Public Permissions">
-			<label class="inline"><input type="checkbox" id="pubRead">Read</label>
-			<label class="inline"><input type="checkbox" id="pubWrit">Write</label>
-			<label class="inline"><input type="checkbox" id="pubExec">Execute</label>
+			<label class="inline"><input type="checkbox" id="pubRead">可读</label>
+			<label class="inline"><input type="checkbox" id="pubWrit">可写</label>
+			<label class="inline"><input type="checkbox" id="pubExec">可运行</label>
 		</div>
 		<form>
 			<input type="hidden" id="perm_path" name="perm_path">
 			<div class="inputs"><label>Permission<input id="perm_code" type="text" maxlength="4" pattern="^0[0-7][0-7][0-7]$"></label></div>
-			<div class="inputs recurse"><label class="inline"><input type="checkbox" id="perm_recursive_chk">Recurse into All Sub-Directories</label></div>
-			<div class="inputs recurse"><label class="inline"><input type="radio" name="recurse" value="df" disabled>All Files & Directories</label></div>
-			<div class="inputs recurse"><label class="inline"><input type="radio" name="recurse" value="d"  disabled>Directories Only</label></div>
-			<div class="inputs recurse"><label class="inline"><input type="radio" name="recurse" value="f"  disabled>Files Only</label></div>
+			<div class="inputs recurse"><label class="inline"><input type="checkbox" id="perm_recursive_chk">将改变应用到所有子目录</label></div>
+			<div class="inputs recurse"><label class="inline"><input type="radio" name="recurse" value="df" disabled>所有文件和目录</label></div>
+			<div class="inputs recurse"><label class="inline"><input type="radio" name="recurse" value="d"  disabled>仅目录</label></div>
+			<div class="inputs recurse"><label class="inline"><input type="radio" name="recurse" value="f"  disabled>仅文件</label></div>
 			<div class="action">
-				<button type="submit" class="btn">Modify</button>
-				<button type="button" class="btn flat" onclick="modal('off');">Close</button>
+				<button type="submit" class="btn">变更</button>
+				<button type="button" class="btn flat" onclick="modal('off');">取消</button>
 			</div>
 		</form>
 	</div>
 
 	<div id="detailModal" class="modal">
-		<h5 class="title">Details and Info</h5>
-		<div class="inputs"><span>Name</span><b class="name"></b></div>
-		<div class="inputs"><span>Path</span><b class="path"></b></div>
-		<div class="inputs"><span>Size</span><b class="size"></b></div>
-		<div class="inputs"><span>Type</span><b class="type"></b></div>
-		<div class="inputs"><span>Owner</span><b class="ownr"></b></div>
-		<div class="inputs"><span>Permission</span><b class="perm"></b></div>
-		<div class="inputs"><span>Created Time</span><b class="ctime"></b></div>
-		<div class="inputs"><span>Accessed Time</span><b class="atime"></b></div>
-		<div class="inputs"><span>Modified Time</span><b class="mtime"></b></div>
+		<h5 class="title">属性&详细信息</h5>
+		<div class="inputs"><span>文件名</span><b class="name"></b></div>
+		<div class="inputs"><span>路径</span><b class="path"></b></div>
+		<div class="inputs"><span>大小</span><b class="size"></b></div>
+		<div class="inputs"><span>类型</span><b class="type"></b></div>
+		<div class="inputs"><span>拥有者</span><b class="ownr"></b></div>
+		<div class="inputs"><span>权限</span><b class="perm"></b></div>
+		<div class="inputs"><span>创建时间</span><b class="ctime"></b></div>
+		<div class="inputs"><span>访问时间</span><b class="atime"></b></div>
+		<div class="inputs"><span>修改时间</span><b class="mtime"></b></div>
 		<div class="action">
-			<button type="button" class="btn" onclick="copy(document.querySelector('#detailModal b.path').innerHTML); toast('Copied to clipboard')">Copy Path</button>
-			<button type="button" class="btn flat" onclick="modal('off');">Close</button>
+			<button type="button" class="btn" onclick="copy(document.querySelector('#detailModal b.path').innerHTML); toast('Copied to clipboard')">复制路径</button>
+			<button type="button" class="btn flat" onclick="modal('off');">关闭</button>
 		</div>
 	</div>
 
 	<div id="configModal" class="modal">
-		<h5 class="title">Settings</h5>
+		<h5 class="title">设置</h5>
 		<form>
 			<div class="inputs">
-				<label>Enter Password<input id="pass" type="password" value="<?= @$_SESSION['__allowed']; ?>" required></label>
+				<label>输入密码<input id="pass" type="password" value="<?= @$_SESSION['__allowed']; ?>" required></label>
 				<a class="btn flat pwdeye" title="Show"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg></a>
 			</div>
 			<div class="inputs">
-				<label class="inline"><input type="checkbox" id="hdfl" <?= @$config->show_hidden == 'true' ? 'checked': ''; ?>>Show Hidden Files</label>
+				<label class="inline"><input type="checkbox" id="hdfl" <?= @$config->show_hidden == 'true' ? 'checked': ''; ?>>显示隐藏文件</label>
 			</div>
 			<div class="action">
-				<button type="submit" class="btn">Save</button>
-				<button type="button" class="btn flat" onclick="modal('off');">Close</button>
+				<button type="submit" class="btn">保存</button>
+				<button type="button" class="btn flat" onclick="modal('off');">取消</button>
 			</div>
 			<div class="action" style="position: absolute; bottom: 1rem; left: 0; right: 0; text-align: center; justify-content: center;">
-				<button type="button" class="btn upgrade" style="background-color: #070;">Upgrade</button>
-				<button type="button" class="btn logout" style="background-color: #B00;">Log Out</button>
+				<button type="button" class="btn upgrade" style="background-color: #070;">更新</button>
+				<button type="button" class="btn logout" style="background-color: #B00;">登出</button>
 			</div>
 		</form>
 	</div>
@@ -1770,7 +1770,7 @@ function inBytes($ini_v) {
 				}
 
 				var len = $modal.find('.uploading').length;
-				docTitle(len + ' uploads in progress');
+				docTitle(len + ' 正在上传');
 				$modal.find('.title').text(document.title);
 				$modal.find('.body').append( renderFileUpload(file, index) );
 
@@ -1786,9 +1786,9 @@ function inBytes($ini_v) {
 					if(e.lengthComputable) {
 						var progress = e.loaded / e.total * 100 | 0;
 						if( progress == 100 )
-							$modal.find('li.upload_'+ index).attr('title', 'Finalizing...').find('.progress span').css('width', '100%');
+							$modal.find('li.upload_'+ index).attr('title', '完成中...').find('.progress span').css('width', '100%');
 						else
-							$modal.find('li.upload_'+ index).attr('title', 'Uploading '+ progress +'%').find('.progress span').css('width', progress + '%');
+							$modal.find('li.upload_'+ index).attr('title', '上传中 '+ progress +'%').find('.progress span').css('width', progress + '%');
 					}
 				};
 
@@ -1796,28 +1796,28 @@ function inBytes($ini_v) {
 					$modal.find('li.upload_'+index).removeClass('uploading').removeAttr('title');
 
 					var len = $modal.find('.uploading').length;
-					docTitle(len + ' uploads in progress');
+					docTitle(len + ' 正在上传');
 					$modal.find('.title').text(document.title);
 					if( len < 1 ){
 						window.setTimeout(function(){
 							list();
 							docTitle();
 							modal('off');
-							toast('Files Uploaded Successfully', '#070');
+							toast('文件上传成功', '#070');
 							$modal.find('.body').empty();
 						}, 2000);
 					}
 				};
 
 				XHR.upload.onabort = function () {
-					docTitle('Files Aborted');
-					$modal.find('li.uploading.upload_'+ index).addClass('error').removeClass('uploading').removeAttr('title', 'Upload Aborted');
+					docTitle('上传已中止');
+					$modal.find('li.uploading.upload_'+ index).addClass('error').removeClass('uploading').removeAttr('title', '上传已中止');
 
 					window.setTimeout(function(){
 						list();
 						docTitle();
 						modal('off');
-						toast('Files Aborted', '#B00');
+						toast('上传已中止', '#B00');
 						$modal.find('.body').empty();
 					}, 5000);
 				};
@@ -1829,7 +1829,7 @@ function inBytes($ini_v) {
 				});
 			}
 			function docTitle(str = null){
-				document.title = typeof str == 'string' ? str : 'File Explorer v' + VERSION;
+				document.title = typeof str == 'string' ? str : '文件资源管理器 v' + VERSION;
 			}
 			function renderFileUpload(file, index) {
 				return $('<li class="upload_'+ index +' uploading">')
@@ -1840,7 +1840,7 @@ function inBytes($ini_v) {
 			}
 			function renderFileError(file, index) {
 				return $('<li class="upload_'+ index +' error">')
-				.attr('title', 'Exceeds max upload size of ' + formatFileSize(MAX_UPLOAD_SIZE))
+				.attr('title', '超过最大文件上传大小 ' + formatFileSize(MAX_UPLOAD_SIZE))
 				.attr('data-size', formatFileSize(file.size))
 				.append( $('<label>').text(file.name) )
 				.append('<div class="progress"><span style="width: 100%;"></span></div>')
@@ -1855,7 +1855,7 @@ function inBytes($ini_v) {
 				e.preventDefault();
 				var HASHVAL = decodeURIComponent(window.location.hash.substr(1));
 				var dirname = $form.find('#dirname').val().trim();
-				toast('Creating...', '', 'wait');
+				toast('创建中...', '', '等待');
 
 				dirname.length && $.post('', {do: 'mkdir', dirname: dirname, path: HASHVAL, xsrf: XSRF}, function(data){
 					list();
@@ -1874,7 +1874,7 @@ function inBytes($ini_v) {
 				e.preventDefault();
 				var HASHVAL = decodeURIComponent(window.location.hash.substr(1));
 				var filename = $form.find('#filename').val().trim();
-				toast('Creating...', '', 'wait');
+				toast('创建中...', '', '等待');
 
 				filename.length && $.post('', {do: 'nwfile', filename: filename, path: HASHVAL, xsrf: XSRF}, function(data){
 					list();
@@ -2299,15 +2299,15 @@ function inBytes($ini_v) {
 				var opt = '';
 				var is_selected = !!$('main .selected').length;
 
-				opt += '<a class="refresh" title="Refresh">Refresh</a>';
-				opt += '<a onclick="modal(\'on\', \'#uploadModal\' )" title="Upload">Upload</a>';
-				opt += '<a onclick="modal(\'on\', \'#newDirModal\' )" title="New Folder">Create Folder</a>';
-				opt += '<a onclick="modal(\'on\', \'#newFileModal\')" title="New File">Create File</a>';
+				opt += '<a class="refresh" title="Refresh">刷新</a>';
+				opt += '<a onclick="modal(\'on\', \'#uploadModal\' )" title="Upload">上传文件</a>';
+				opt += '<a onclick="modal(\'on\', \'#newDirModal\' )" title="New Folder">新建文件夹</a>';
+				opt += '<a onclick="modal(\'on\', \'#newFileModal\')" title="New File">新建文件</a>';
 
-				if( is_selected ) opt += '<a class="copy" title="Copy">Copy</a>';
-				if( is_selected ) opt += '<a class="move" title="Move">Move</a>';
-				if( is_selected ) opt += '<a class="delete" title="Delete">Delete</a>';
-				if(   CLIPBOARD ) opt += '<a class="paste" title="Paste">Paste</a>';
+				if( is_selected ) opt += '<a class="copy" title="Copy">拷贝</a>';
+				if( is_selected ) opt += '<a class="move" title="Move">移动</a>';
+				if( is_selected ) opt += '<a class="delete" title="Delete">删除</a>';
+				if(   CLIPBOARD ) opt += '<a class="paste" title="Paste">粘贴</a>';
 
 				// ONLY if clicked with <main> tag AND not clicked with in item or modal
 				if ( !($('.item').has(e.target).length || $('.modal.on').has(e.target).length) ){
@@ -2331,18 +2331,18 @@ function inBytes($ini_v) {
 				});
 
 				var menu = {
-					open   : '<a href="#'+ obj.path +'" title="Open">Open</a>',
-					runit  : '<a href="'+ obj.path +'" target="_blank" title="View">Run</a>',
-					dwnld  : '<a href="?do=download&path='+ encodeURIComponent(obj.path) +'" title="Download">Download</a>',
-					edit   : '<a href="?do=edit&path='+ encodeURIComponent(obj.path) +'" target="_blank" title="Edit">View / Edit</a>',
-					copy   : '<a class="copy" title="Copy">Copy</a>',
-					move   : '<a class="move" title="Move">Move</a>',
-					rename : '<a class="rename" title="Rename">Rename</a>',
-					delete : '<a class="delete" title="Delete">Delete</a>',
-					cmprss : '<a class="cmprss" title="Compress">Compress</a>',
-					extrct : '<a class="extrct" title="Extract">Extract</a>',
-					permit : '<a class="permit" title="Permissions">Permissions</a>',
-					info   : '<a class="info" title="Info">View Details</a>',
+					open   : '<a href="#'+ obj.path +'" title="Open">打开</a>',
+					runit  : '<a href="'+ obj.path +'" target="_blank" title="View">运行</a>',
+					dwnld  : '<a href="?do=download&path='+ encodeURIComponent(obj.path) +'" title="Download">下载</a>',
+					edit   : '<a href="?do=edit&path='+ encodeURIComponent(obj.path) +'" target="_blank" title="Edit">查看/编辑</a>',
+					copy   : '<a class="copy" title="Copy">拷贝</a>',
+					move   : '<a class="move" title="Move">移动</a>',
+					rename : '<a class="rename" title="Rename">重命名</a>',
+					delete : '<a class="delete" title="Delete">删除</a>',
+					cmprss : '<a class="cmprss" title="Compress">压缩</a>',
+					extrct : '<a class="extrct" title="Extract">解压</a>',
+					permit : '<a class="permit" title="Permissions">权限</a>',
+					info   : '<a class="info" title="Info">属性</a>',
 				}
 				if( !is_selected ){
 					opt += obj.is_dir      == 'true' ? menu.open : menu.runit;
@@ -2697,7 +2697,7 @@ function html_setup($phpInfo){?>
 	<!DOCTYPE html>
 	<html lang="en">
 	<head>
-		<title>File Explorer v<?= VERSION; ?></title>
+		<title>文件资源管理器 v<?= VERSION; ?></title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
 		<style>
@@ -2896,7 +2896,7 @@ function html_login($label){?>
 	<!DOCTYPE html>
 	<html lang="en">
 	<head>
-		<title>File Explorer v<?= VERSION; ?></title>
+		<title>文件资源管理器 v<?= VERSION; ?></title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
 		<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAAwFBMVEVMaXEhZZlLoeZUrO0obqRUrO0hZZkob69UrO5UrO4iZpkhZZlTq+1Vf6wiZJohZphUrO5UrO4hZZkhZZlUrO4hZZkiZJpVrO0hZplFldNUq+48icRFltRUrO1UrO5Uq+0hZZlVq+4eZJohZphUrO5Mn94iZplVrO4hZZlJm9tXruwiZphDlNFWrO1UrO1Vq+1VrO5Uq+0veK8mbKFOouM2gbpRp+hTqus6h8IzfbZEldNAkc0jaJwsc6lHmtgiZpkio2ylAAAAMHRSTlMA/A039JHTB96uLZYdAyiRcviI29XoTc2+zepM0VaewKZfIZh89l/z8+wp9O9HgmUP4OQcAAABgElEQVR4Ae3UBXbdQBBE0RYzmNkOg7HF5tn/qsLtz6IKJ3cBb0ZSHdF/fyo/sc/UNG3Lfrkd0UBOoKllNrYHdnbVKsGgSwVqtWdD3o+mWqxTb4lq9Yb6slWrM596eqfabb2gflSXjRgNibN138FC7Xk78dGQ0AIHDYldBw2J5HuFNB8NieR7hezvFTobGSqq27LmGfsnqT40VNw1vIxrDAvlNa+wZgwJ3WS8kusQ2BHPe4fyhtt4fUMPNbfaJLAjXAK/l9jpESryWxb93tH9p9lmPI41FcpLHi+dhKqMAUc0tTeEIaGiZkgooWuGrEUSKhni0rfQPWNOJPTAmGMJ3TDmUkLXjLmS0B1jLiT0yJhTCZWM0SXUMGSfvoUKxuxIKGeMJ6GKMZaE0BmlEkJndCQhdEaGhNAZhd9C9xn8WyP6HjNy6RMT/GgyIzp/KKqGMa/ok0OGZSF9cpAx6pjou1zJ1ekL/T3YCekbfS8D3o+n08TB3uuGR3i7aRn0B/vvI/0jAVz6iypMAAAAAElFTkSuQmCC">
@@ -3111,7 +3111,7 @@ function html_editor($file){?>
 	<!DOCTYPE html>
 	<html lang="en">
 	<head>
-		<title>Edit {<?= basename($file); ?>}</title>
+		<title>编辑文件 {<?= basename($file); ?>}</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
 		<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAAwFBMVEVMaXEhZZlLoeZUrO0obqRUrO0hZZkob69UrO5UrO4iZpkhZZlTq+1Vf6wiZJohZphUrO5UrO4hZZkhZZlUrO4hZZkiZJpVrO0hZplFldNUq+48icRFltRUrO1UrO5Uq+0hZZlVq+4eZJohZphUrO5Mn94iZplVrO4hZZlJm9tXruwiZphDlNFWrO1UrO1Vq+1VrO5Uq+0veK8mbKFOouM2gbpRp+hTqus6h8IzfbZEldNAkc0jaJwsc6lHmtgiZpkio2ylAAAAMHRSTlMA/A039JHTB96uLZYdAyiRcviI29XoTc2+zepM0VaewKZfIZh89l/z8+wp9O9HgmUP4OQcAAABgElEQVR4Ae3UBXbdQBBE0RYzmNkOg7HF5tn/qsLtz6IKJ3cBb0ZSHdF/fyo/sc/UNG3Lfrkd0UBOoKllNrYHdnbVKsGgSwVqtWdD3o+mWqxTb4lq9Yb6slWrM596eqfabb2gflSXjRgNibN138FC7Xk78dGQ0AIHDYldBw2J5HuFNB8NieR7hezvFTobGSqq27LmGfsnqT40VNw1vIxrDAvlNa+wZgwJ3WS8kusQ2BHPe4fyhtt4fUMPNbfaJLAjXAK/l9jpESryWxb93tH9p9lmPI41FcpLHi+dhKqMAUc0tTeEIaGiZkgooWuGrEUSKhni0rfQPWNOJPTAmGMJ3TDmUkLXjLmS0B1jLiT0yJhTCZWM0SXUMGSfvoUKxuxIKGeMJ6GKMZaE0BmlEkJndCQhdEaGhNAZhd9C9xn8WyP6HjNy6RMT/GgyIzp/KKqGMa/ok0OGZSF9cpAx6pjou1zJ1ekL/T3YCekbfS8D3o+n08TB3uuGR3i7aRn0B/vvI/0jAVz6iypMAAAAAElFTkSuQmCC">
